@@ -11,11 +11,12 @@ class BaseModel(models.Model):
 
 class College(BaseModel):
     college_name = models.CharField(max_length=150)
+    # Add this line below
+    description = models.TextField(blank=True, null=True) 
 
     def __str__(self):
         return self.college_name
-
-
+    
 class Program(BaseModel):
     prog_name = models.CharField(max_length=150)
     college = models.ForeignKey(College, on_delete=models.CASCADE)

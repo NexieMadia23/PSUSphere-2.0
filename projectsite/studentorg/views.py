@@ -4,12 +4,32 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from .models import Organization, OrgMember, Student, College, Program
 from .forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 
 # --- HOME ---
-class HomePageView(TemplateView):
-    template_name = 'home.html'
+class HomePageView(LoginRequiredMixin, ListView):
+    model = Organization
+    context_object_name = 'home'
+    template_name = "home.html"
+    login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_students"] = Student.objects.count()
+        context["total_organizations"] = Organization.objects.count()
+        context["total_programs"] = Program.objects.count()
+        
+        today = timezone.now().date()
+        context["students_joined_this_year"] = (
+            OrgMember.objects.filter(date_joined__year=today.year)
+            .values("student")
+            .distinct()
+            .count()
+        )
+        return context
 
 # --- ORGANIZATION ---
 class OrganizationList(ListView):
@@ -50,9 +70,9 @@ class OrgMemberList(ListView):
     context_object_name = 'orgmember'
     template_name = 'orgmember_list.html'
     paginate_by = 5
+    ordering = ['student__lastname', 'date_joined'] # Added sorting as per activity
 
     def get_queryset(self):
-        # Optimized with select_related for student and organization
         queryset = OrgMember.objects.select_related('student', 'organization')
         query = self.request.GET.get('q')
         if query:
@@ -88,7 +108,6 @@ class StudentList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        # Optimized to reach Program AND College in one go
         queryset = Student.objects.select_related('program__college')
         query = self.request.GET.get('q')
         if query:
@@ -126,13 +145,14 @@ class CollegeList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = College.objects.all()
+        qs = super().get_queryset()
         query = self.request.GET.get('q')
         if query:
-            queryset = queryset.filter(
-                Q(college_name__icontains=query) # Note: matching your model field name 'college_name'
+            qs = qs.filter(
+                Q(college_name__icontains=query) | 
+                Q(description__icontains=query)
             )
-        return queryset
+        return qs
 
 class CollegeCreateView(CreateView):
     model = College
@@ -158,8 +178,14 @@ class ProgramList(ListView):
     template_name = 'program_list.html'
     paginate_by = 5
 
+    def get_ordering(self):
+        allowed = ["prog_name", "college__college_name"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "prog_name"
+
     def get_queryset(self):
-        # Optimized with select_related for college
         queryset = Program.objects.select_related('college')
         query = self.request.GET.get('q')
         if query:
@@ -180,6 +206,7 @@ class ProgramUpdateView(UpdateView):
     template_name = 'program_form.html'
     success_url = reverse_lazy('program-list')
 
+# Fixed the typo here: ProgramDeletesView -> ProgramDeleteView
 class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
