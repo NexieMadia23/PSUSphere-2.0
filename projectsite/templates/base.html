@@ -24,13 +24,15 @@
             </div>
             <nav class="navbar navbar-header navbar-expand-lg">
                 <div class="container-fluid">
-                    <form class="navbar-left navbar-form nav-search mr-md-3" action="">
+                    <form class="navbar-left navbar-form nav-search mr-md-3" method="GET" action="{% url 'student-list' %}">
                         <div class="input-group">
-                            <input type="text" name="q" placeholder="Search ..." class="form-control">
+                            <input type="text" name="q" placeholder="Search Students..." class="form-control" value="{{ request.GET.q|default:'' }}">
                             <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="la la-search search-icon"></i>
-                                </span>
+                                <button type="submit" style="background: transparent; border: none; padding: 0;">
+                                    <span class="input-group-text">
+                                        <i class="la la-search search-icon"></i>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </form>
