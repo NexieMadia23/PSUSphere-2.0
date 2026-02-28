@@ -11,19 +11,58 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/openapi/itools/bundle/1.1.0/line-awesome/font-awesome-line-awesome/css/all.min.css">
     
     <style>
+        /* Steady Sidebar Styles */
+        .sidebar {
+            position: fixed !important;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            z-index: 1000;
+            overflow-y: auto;
+            background: #fff;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        /* Pulls the menu items much higher */
+        .sidebar .sidebar-wrapper {
+            padding-top: 0px !important; /* Removes the large top gap */
+        }
+
+        .sidebar .user {
+            margin-top: 5px !important; /* Moves the profile pic closer to the logo */
+            padding-bottom: 10px !important;
+            margin-bottom: 0px !important;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .sidebar .nav {
+            margin-top: 0px !important; /* Menu starts immediately after user info */
+        }
+
+        .main-panel {
+            margin-left: 250px; 
+            min-height: 100vh;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 991px) {
+            .sidebar { margin-left: -250px; }
+            .main-panel { margin-left: 0; }
+        }
+
+        /* Upgrade Button Styles */
         .nav-item.update-pro button {
             background-color: #1d7af3 !important;
             border: none !important;
             width: 90% !important;
-            margin: 20px auto !important;
+            margin: 15px auto !important;
             display: block !important;
-            padding: 12px !important;
+            padding: 10px !important;
             border-radius: 5px !important;
             color: white !important;
             text-align: center;
         }
-        .nav-item.update-pro button:hover { background-color: #1572e8 !important; }
-        .nav-item.update-pro i { color: white !important; margin-right: 8px; }
     </style>
 </head>
 <body>
@@ -31,7 +70,7 @@
         <div class="main-header">
             <div class="logo-header">
                 <a href="/" class="logo">PSUSphere 2.0</a>
-                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
@@ -39,10 +78,6 @@
             <nav class="navbar navbar-header navbar-expand-lg">
                 <div class="container-fluid">
                     <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-                        <li class="nav-item"><a class="nav-link" href="#"><i class="la la-envelope"></i></a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"><i class="la la-bell"></i><span class="notification">3</span></a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
                                 <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
@@ -64,19 +99,18 @@
                         <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                             <span>Hizrian <span class="user-level">Administrator</span><span class="caret"></span></span>
                         </a>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
 
                 <ul class="nav">
-                    <li class="nav-item active">
+                    <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                         <a href="{% url 'home' %}">
                             <i class="la la-dashboard"></i>
                             <p>Dashboard</p>
                             <span class="badge badge-count">5</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {% if 'organization' in request.resolver_match.url_name %}active{% endif %}">
                         <a href="{% url 'organization-list' %}">
                             <i class="la la-graduation-cap"></i>
                             <p>Organization</p>
@@ -104,7 +138,6 @@
                             <span class="badge badge-success">3</span>
                         </a>
                     </li>
-                 
                 </ul>
             </div>
         </div>
