@@ -25,6 +25,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">College</th>
                                     <th scope="col">Description</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,10 +34,15 @@
                                     <td>{{ object.name }}</td>
                                     <td>{{ object.college }}</td>
                                     <td>{{ object.description }}</td>
+                                    <td>
+                                        <a href="{% url 'organization-update' object.id %}" class="btn btn-link btn-primary">
+                                            <i class="la la-edit"></i> Edit
+                                        </a>
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center">No Records Found</td>
+                                    <td colspan="4" class="text-center">No Records Found</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
