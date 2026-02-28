@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
+# Import allauth views specifically to fix the template error
+from allauth.account import views as allauth_views 
+
 from studentorg.views import (
     HomePageView, 
     OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
@@ -14,13 +16,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # --- ALLAUTH URLS (Login, Signup, Socials) ---
-    # This provides 'account_login', 'account_logout', etc.
     path('accounts/', include('allauth.urls')), 
 
-    # --- ALIASES (Prevents "Reverse for 'login' not found" errors) ---
-    # If your template still uses {% url 'login' %}, these lines will catch it.
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    # --- ALIASES (Fixed to use Allauth views) ---
+    # These prevent "Reverse for 'login' not found" AND "TemplateDoesNotExist"
+    path('login/', allauth_views.login, name='login'),
+    path('logout/', allauth_views.logout, name='logout'),
+    path('signup/', allauth_views.signup, name='signup'),
     
     path('', HomePageView.as_view(), name='home'),
     
