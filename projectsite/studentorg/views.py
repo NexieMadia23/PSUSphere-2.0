@@ -67,13 +67,16 @@ class OrganizationDeleteView(DeleteView):
 # --- ORGMEMBER ---
 class OrgMemberList(ListView):
     model = OrgMember
-    context_object_name = 'orgmember'
+    # Using 'object_list' to match your template's {% for object in object_list %}
+    context_object_name = 'object_list' 
     template_name = 'orgmember_list.html'
     paginate_by = 5
-    ordering = ['student__lastname', 'date_joined'] # Added sorting as per activity
 
     def get_queryset(self):
+        # Optimized with select_related for better performance
         queryset = OrgMember.objects.select_related('student', 'organization')
+        
+        # 🔍 Handle Search
         query = self.request.GET.get('q')
         if query:
             queryset = queryset.filter(
@@ -81,8 +84,21 @@ class OrgMemberList(ListView):
                 Q(student__lastname__icontains=query) |
                 Q(organization__name__icontains=query)
             )
-        return queryset
 
+        # 📊 Handle Sorting (Matching your template dropdown name="sort_by")
+        sort_by = self.request.GET.get('sort_by')
+        
+        if sort_by == 'student__lastname':
+            # Sort by student's last name
+            queryset = queryset.order_by('student__lastname', 'student__firstname')
+        elif sort_by == 'date_joined':
+            # Sort by date (descending - newest members first)
+            queryset = queryset.order_by('-date_joined')
+        else:
+            # Default sorting if nothing is selected
+            queryset = queryset.order_by('student__lastname')
+
+        return queryset
 class OrgMemberCreateView(CreateView):
     model = OrgMember
     form_class = OrgMemberForm
