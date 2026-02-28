@@ -1,17 +1,27 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from studentorg.views import (
     HomePageView, 
     OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
     OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
     StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView,
-    # Added these imports to match your paths below
     CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,
     ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # --- ALLAUTH URLS (Login, Signup, Socials) ---
+    # This provides 'account_login', 'account_logout', etc.
+    path('accounts/', include('allauth.urls')), 
+
+    # --- ALIASES (Prevents "Reverse for 'login' not found" errors) ---
+    # If your template still uses {% url 'login' %}, these lines will catch it.
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    
     path('', HomePageView.as_view(), name='home'),
     
     # --- ORGANIZATION URLS ---

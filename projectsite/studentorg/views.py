@@ -18,11 +18,15 @@ class HomePageView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        today = timezone.now().date()
+        
+        # Core Counters
         context["total_students"] = Student.objects.count()
         context["total_organizations"] = Organization.objects.count()
         context["total_programs"] = Program.objects.count()
+        context["total_colleges"] = College.objects.count() # Added this!
         
-        today = timezone.now().date()
+        # Students who joined ANY organization this calendar year
         context["students_joined_this_year"] = (
             OrgMember.objects.filter(date_joined__year=today.year)
             .values("student")
