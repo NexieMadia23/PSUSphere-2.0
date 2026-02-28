@@ -83,11 +83,8 @@ DATABASES = {
     }
 }
 
-# 4. Dynamic Site Configuration
-if "pythonanywhere" in socket.gethostname():
-    SITE_ID = 2 
-else:
-    SITE_ID = 1
+
+SITE_ID = 1  # Make sure this matches the ID of the site you picked in Admin
 
 # 5. AllAuth Specific Settings
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

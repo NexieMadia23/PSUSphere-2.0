@@ -1,4 +1,5 @@
-{% load static %} <!DOCTYPE html> 
+{% load static %}
+<!DOCTYPE html> 
 <html lang="en"> 
   <head> 
     <meta charset="utf-8" /> 
@@ -23,7 +24,17 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
         padding: 2rem; 
         text-align: center; 
-      } 
+      }
+      .btn-google {
+        background-color: #4285F4;
+        color: white;
+      }
+      /* Added a hover effect so you know it's working */
+      .github-link:hover {
+        opacity: 0.7;
+        transform: scale(1.1);
+        transition: 0.2s;
+      }
     </style> 
   </head> 
   <body> 
@@ -34,10 +45,15 @@
 
       <form method="post"> 
         {% csrf_token %} 
-        <button type="submit" class="btn btn-primary btn-block mb-3">Continue with {{ provider.name }}</button> 
+        <button type="submit" class="btn btn-google btn-block mb-3">
+          <i class="fab fa-google mr-2"></i> Continue with {{ provider.name }}
+        </button> 
       </form> 
 
-      <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-block"> Cancel </a> 
+      <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-block"> Cancel </a>
+      
+      <hr class="my-4">
+      
     </div> 
   </body> 
 </html>
