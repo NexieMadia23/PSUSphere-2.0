@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{% block title %}PSUSphere 2.0{% endblock %}</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="{% static 'css/ready.css' %}">
+    <link rel="stylesheet" href="https://maxst.icons8.com/openapi/itools/bundle/1.1.0/line-awesome/font-awesome-line-awesome/css/all.min.css">
+    
+    <style>
+        /* Forces the Upgrade button to be vibrant Blue */
+        .nav-item.update-pro button {
+            background-color: #1d7af3 !important;
+            border: none !important;
+            width: 90% !important;
+            margin: 20px auto !important;
+            display: block !important;
+            padding: 12px !important;
+            border-radius: 5px !important;
+            color: white !important;
+            text-align: center;
+        }
+        .nav-item.update-pro button:hover {
+            background-color: #1572e8 !important;
+        }
+        .nav-item.update-pro i {
+            color: white !important;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-header">
+            <div class="logo-header">
+                <a href="/" class="logo">PSUSphere 2.0</a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+            </div>
+            <nav class="navbar navbar-header navbar-expand-lg">
+                <div class="container-fluid">
+                    <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="la la-envelope"></i></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="la la-bell"></i>
+                                <span class="notification">3</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+                                <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+                                <span>Admin</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="sidebar">
+            <div class="scrollbar-inner sidebar-wrapper">
+                <div class="user">
+                    <div class="photo">
+                        <img src="{% static 'img/profile.jpg' %}">
+                    </div>
+                    <div class="info">
+                        <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                            <span>
+                                Hizrian
+                                <span class="user-level">Administrator</span>
+                                <span class="caret"></span>
+                            </span>
+                        </a>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <ul class="nav">
+                    <li class="nav-item active">
+                        <a href="{% url 'home' %}"><i class="la la-dashboard"></i><p>Dashboard</p></a>
+                    </li>
+                    <li class="nav-item"><a href="#"><i class="la la-table"></i><p>Components</p></a></li>
+                    <li class="nav-item"><a href="#"><i class="la la-keyboard-o"></i><p>Forms</p></a></li>
+                    <li class="nav-item"><a href="#"><i class="la la-th"></i><p>Tables</p></a></li>
+                    <li class="nav-item"><a href="#"><i class="la la-bell"></i><p>Notifications</p></a></li>
+                    <li class="nav-item"><a href="#"><i class="la la-font"></i><p>Typography</p></a></li>
+                    <li class="nav-item"><a href="#"><i class="la la-paint-brush"></i><p>Icons</p></a></li>
+                    
+                    <li class="nav-item update-pro">
+                        <button type="button">
+                            <i class="la la-rocket"></i>
+                            Upgrade to Pro
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-panel">
+            <div class="content">
+                <div class="container-fluid">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="copyright ml-auto">
+                        2026, PSUSphere 2.0
+                    </div>				
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static 'js/core/popper.min.js' %}"></script>
+<script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/ready.min.js' %}"></script>
+</html>
