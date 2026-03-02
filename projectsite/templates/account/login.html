@@ -23,18 +23,19 @@
       <div class="mb-4"> 
         <p class="text-muted mb-3">Sign in with:</p> 
         
-        {# This loop prevents the DoesNotExist error #}
         {% get_providers as socialaccount_providers %}
         
         {% for provider in socialaccount_providers %}
             {% if provider.id == "google" %}
-            <a href="{% provider_login_url 'google' %}" class="btn-floating-custom mx-2" title="Google"> 
+            {# Added process='login' to bypass confirmation screens #}
+            <a href="{% provider_login_url 'google' process='login' %}" class="btn-floating-custom mx-2" title="Google"> 
               <i class="fab fa-google" style="color: #DB4437;"></i> 
             </a> 
             {% endif %}
 
             {% if provider.id == "github" %}
-            <a href="{% provider_login_url 'github' %}" class="btn-floating-custom mx-2" title="GitHub">
+            {# Added process='login' to bypass confirmation screens #}
+            <a href="{% provider_login_url 'github' process='login' %}" class="btn-floating-custom mx-2" title="GitHub">
               <i class="fab fa-github" style="color: #333;"></i> 
             </a> 
             {% endif %}
