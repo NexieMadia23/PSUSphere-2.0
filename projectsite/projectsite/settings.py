@@ -8,8 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-1&s10p)-dl_h_gzl!bhtsd=5%+@g-67tv(b1mq%!p%6#&3kssq'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# --- SMART DEBUG LOGIC ---
+if 'nexiee' in socket.gethostname().lower():
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['nexiee.pythonanywhere.com', '127.0.0.1', 'localhost']
 
@@ -32,7 +35,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.github', # GitHub Provider
 ]
 
 # 2. Authentication Backends
@@ -48,10 +51,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-    # Required for AllAuth
     'allauth.account.middleware.AccountMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -83,24 +83,40 @@ DATABASES = {
     }
 }
 
+# --- AllAuth & Social Settings ---
+SITE_ID = 1  
 
-SITE_ID = 1  # Make sure this matches the ID of the site you picked in Admin
-
-# 5. AllAuth Specific Settings
+# Force HTTPS on production, HTTP on local
+if not DEBUG:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+else:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = [
-    "username*",
-    "email*",
-    "password1*",
-    "password2*",
-]
+
+# --- GitHub & Google Account Linking Logic ---
+SOCIALACCOUNT_AUTO_SIGNUP = True        # Link account without extra forms
+SOCIALACCOUNT_QUERY_EMAIL = True       # Ask GitHub/Google for the user's email
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none" 
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+# Specific GitHub scopes to ensure we get the user profile
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -120,13 +136,3 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# Where to go AFTER logging in
-LOGIN_REDIRECT_URL = '/'
-
-# --- Social Account Customization (One-Click Login) ---
-SOCIALACCOUNT_AUTO_SIGNUP = True        # Skips the second signup form
-SOCIALACCOUNT_QUERY_EMAIL = True       # Requests email from the provider
-ACCOUNT_EMAIL_REQUIRED = True          # Ensures a user has an email
-ACCOUNT_EMAIL_VERIFICATION = "none"    # Prevents "Verify your email" block
-SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
